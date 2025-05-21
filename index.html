@@ -1,0 +1,60 @@
+
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perde Hesaplayıcı</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('service-worker.js')
+        .then(() => console.log("Service Worker kayıt edildi"))
+        .catch(err => console.error("Service Worker hatası:", err));
+    }
+  </script>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1rem;
+      background-color: #f4f4f4;
+    }
+    input, button {
+      font-size: 1.2rem;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <h1>Perde Hesaplayıcı</h1>
+  <p>Pencere Genişliği (cm):</p>
+  <input type="number" id="pencere" />
+  <p>Toplam Kumaş (cm):</p>
+  <input type="number" id="kumas" />
+  <p>Pile Oranı (opsiyonel, örn: 2.5):</p>
+  <input type="number" step="0.1" id="pile" />
+  <button onclick="hesapla()">Hesapla</button>
+  <div id="sonuc"></div>
+
+  <script>
+    function hesapla() {
+      const pencere = parseFloat(document.getElementById('pencere').value);
+      const kumas = parseFloat(document.getElementById('kumas').value);
+      const pile = parseFloat(document.getElementById('pile').value) || (kumas / pencere);
+
+      const gerekenKumas = pencere * pile;
+      const artan = kumas - gerekenKumas;
+      const pileBoşlugu = gerekenKumas / pencere;
+
+      document.getElementById('sonuc').innerHTML = `
+        <p><strong>Seçilen pile oranı:</strong> ${pile.toFixed(2)}</p>
+        <p><strong>Her pencere için gereken kumaş:</strong> ${gerekenKumas.toFixed(2)} cm</p>
+        <p><strong>Artan kumaş:</strong> ${artan.toFixed(2)} cm</p>
+        <p><strong>1 cm pencere için pile boşluğu:</strong> ${pileBoşlugu.toFixed(2)} cm</p>
+      `;
+    }
+  </script>
+</body>
+</html>
